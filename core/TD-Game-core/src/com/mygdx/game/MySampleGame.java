@@ -38,9 +38,12 @@ public class MySampleGame extends ApplicationAdapter implements InputProcessor, 
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false,w,h);
 		camera.update();
+		
+		//get tiled map made using application called "Tiled"
 		tiledMap = new TmxMapLoader().load("plain.tmx");
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
 		
+		//setup gesture detection
 		InputMultiplexer im = new InputMultiplexer();
 		GestureDetector gd = new GestureDetector(this);
 		im.addProcessor(gd);
@@ -62,8 +65,9 @@ public class MySampleGame extends ApplicationAdapter implements InputProcessor, 
 		
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); //clear everything
 		camera.update();
+		
 		tiledMapRenderer.setView(camera);
 		tiledMapRenderer.render();
 		
@@ -106,9 +110,10 @@ public class MySampleGame extends ApplicationAdapter implements InputProcessor, 
 
 	@Override
 	public boolean keyUp(int keycode) {
-        if(keycode == Input.Keys.LEFT)
-            camera.translate(-32,0);
+		//move camera with arrows in desktop mode
         if(keycode == Input.Keys.RIGHT)
+            camera.translate(-32,0);
+        if(keycode == Input.Keys.LEFT)
             camera.translate(32,0);
         if(keycode == Input.Keys.UP)
             camera.translate(0,-32);
@@ -200,9 +205,7 @@ public class MySampleGame extends ApplicationAdapter implements InputProcessor, 
 
 	@Override
 	public boolean zoom(float initialDistance, float distance) {
-		w-=(distance-initialDistance)/10;
-		h-=(distance-initialDistance)/10;
-		camera.setToOrtho(false, w, h);
+		camera.zoom -= (distance-initialDistance)/10000f;
 		camera.update();
 		return false;
 	}
